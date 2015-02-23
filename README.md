@@ -1,15 +1,11 @@
-# fliglio-app
+# Fliglio Consul Demo App
 
 ## Install
 
 ### application scaffolding
 	
-	composer create-project fliglio/app --dev
+	composer create-project consul-demo --dev
 
-### docker
-
-	docker build -t benschw/fl .
-	docker run -t -d -p 80 benschw/fl
 
 ### vhost-myapp
 
@@ -32,6 +28,3 @@
 	</VirtualHost>
 
 
-### Try it out
-
-	curl http://fl.local/api/foo
