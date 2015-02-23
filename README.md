@@ -4,7 +4,7 @@
 
 ### application scaffolding
 	
-	composer create-project consul-demo --dev
+	composer create-project consul-app --dev
 
 
 ### vhost-myapp
