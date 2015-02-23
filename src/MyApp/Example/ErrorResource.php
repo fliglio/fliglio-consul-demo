@@ -13,8 +13,9 @@ class ErrorResource {
 	public function __construct() {
 	}
 	
-	public function handleError() {
-		return new View("ERROR");
+	public function handleError(Context $context) {
+
+		return new View("<pre>".$context->getRequest()->getProp("exception")."</pre>");
 	}
 	public function pageNotFound() {
 		return new View("404");

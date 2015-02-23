@@ -24,15 +24,21 @@ require_once __DIR__ . '/../fliglio/bootstrap.php';
 // Configure Routing
 $routeMap = new RouteMap();
 $routeMap
+	->connect('demo', RouteBuilder::get()
+		->uri('/demo')
+		->command('MyApp\Example.DemoResource.getDemo')
+		->method(HttpAttributes::METHOD_GET)
+		->build()
+	)
 	->connect('foo', RouteBuilder::get()
-		->uri('/api/foo/:id')
+		->uri('/foo')
 		->command('MyApp\Example.FooResource.getFoo')
 		->method(HttpAttributes::METHOD_GET)
 		->build()
 	)
-	->connect("all-foo", RouteBuilder::get()
-		->uri('/api/foo')
-		->command('MyApp\Example.FooResource.getAllFoos')
+	->connect('health', RouteBuilder::get()
+		->uri('/api/health')
+		->command('MyApp\Example.HealthResource.getHealth')
 		->method(HttpAttributes::METHOD_GET)
 		->build()
 	)
@@ -51,11 +57,9 @@ $routeMap
 
 
 // Configure Front Controller Chain & Default Resolver
-$htmlChain = new flfc\HttpApp(new flfc\ServeHtmlApp(dirname(__FILE__) . '/index.html'));
-$apiChain  = new flfc\HttpApp(new UriLintApp(new RoutingApp(new DiInvokerApp(), $routeMap)));
+$chain  = new flfc\HttpApp(new UriLintApp(new RoutingApp(new DiInvokerApp(), $routeMap)));
 
-FcChainFactory::addResolver(new DefaultFcChainResolver($apiChain));
-FcChainFactory::addResolver(new NamespaceFcChainResolver($apiChain, 'api'));
+FcChainFactory::addResolver(new DefaultFcChainResolver($chain));
 
 // Run App
 $context = new Context(Request::createDefault(), new Response());

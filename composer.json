@@ -11,6 +11,7 @@
 		"fliglio/flfc":    "dev-master",
 		"fliglio/routing": "dev-master",
 		"fliglio/restfc":  "dev-master",
+		"fliglio/consul":  "dev-master",
 		"fliglio/web":     "dev-master",
 		"fliglio/fltk":    "dev-master"
 	},
