@@ -14,6 +14,8 @@ use Fliglio\Consul\ConsulAddressProvider;
 use Fliglio\Fltk\View;
 use Fliglio\Fltk\JsonView;
 
+use Fliglio\Web\Curl;
+use Fliglio\Web\CurlRequest;
 
 
 class DemoResource {
@@ -27,13 +29,22 @@ class DemoResource {
 		$ap = new ConsulAddressProvider($lb);
 		$add = $ap->getAddress();
 
+		$url = sprintf("%s://%s:%s/foo", $add->getScheme(), $add->getHost(), $add->getPort());
+
+		$curl = new Curl();
+		$resp = $curl->request(new CurlRequest(Curl::GET, $url));
+
+		$content = json_decode($resp->getContent());
+
 
 		return new JsonView(array(
 			'discovered' => array(
 				'host' => $add->getHost(),
 				'port' => $add->getPort()
 			),
-			'resource' => 'demo'
+			'resource' => 'demo',
+			'content' => $content
+
 		));
 	}
 

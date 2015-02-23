@@ -16,6 +16,7 @@ class FooResource {
 
 	public function getFoo(Context $context) {
 		return new JsonView(array(
+			'address' => $_SERVER['SERVER_ADDR'],
 			'resource' => 'foo'
 		));
 	}
