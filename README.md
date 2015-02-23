@@ -4,7 +4,7 @@
 
 ### application scaffolding
 	
-	composer create-project consul-app --dev
+	composer create-project fliglio/consul-app --dev
 
 
 ### vhost-myapp
