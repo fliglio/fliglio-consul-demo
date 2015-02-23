@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0a5b8f25e3c75a7a06c5e8109e38ad6f",
+    "hash": "b415848d15847af22c95267601b317da",
     "packages": [
         {
             "name": "fliglio/consul",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fliglio/consul.git",
-                "reference": "d9a0fdd82c4418b3a7c67b7464bd56c6fc9a4e14"
+                "reference": "273dd71a8097d0860dbee10536fb1efefeb686e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fliglio/consul/zipball/d9a0fdd82c4418b3a7c67b7464bd56c6fc9a4e14",
-                "reference": "d9a0fdd82c4418b3a7c67b7464bd56c6fc9a4e14",
+                "url": "https://api.github.com/repos/fliglio/consul/zipball/273dd71a8097d0860dbee10536fb1efefeb686e0",
+                "reference": "273dd71a8097d0860dbee10536fb1efefeb686e0",
                 "shasum": ""
             },
             "require": {
@@ -43,7 +43,7 @@
                     "email": "benschw@gmail.com"
                 }
             ],
-            "time": "2015-02-20 16:52:13"
+            "time": "2015-02-23 14:55:22"
         },
         {
             "name": "fliglio/flfc",
