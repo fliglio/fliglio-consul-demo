@@ -2,22 +2,29 @@
 namespace MyApp;
 
 use Fliglio\Flfc\Context;
-use Fliglio\Flfc\Request;
+use Fliglio\Flfc\RequestFactory;
 use Fliglio\Flfc\Response;
-use Fliglio\Flfc as flfc;
-use Fliglio\Flfc\NamespaceFcChainResolver;
-use Fliglio\Flfc\DefaultFcChainResolver;
-use Fliglio\Flfc\FcChainFactory;
-use Fliglio\Flfc\FcChainRunner;
-use Fliglio\Routing\UriLintApp;
+use Fliglio\Flfc\FcChainRegistry;
+use Fliglio\Flfc\FcDispatcherFactory;
+
+use Fliglio\Flfc\Resolvers\NamespaceFcChainResolver;
+use Fliglio\Flfc\Resolvers\DefaultFcChainResolver;
+use Fliglio\Flfc\Apps\HttpApp;
+use Fliglio\Flfc\Apps\RestApp;
+use Fliglio\Flfc\Apps\ServeHtmlApp;
+
+use Fliglio\Routing\UrlLintApp;
 use Fliglio\Routing\RoutingApp;
 use Fliglio\Routing\RouteMap;
 use Fliglio\Routing\Type\RouteBuilder;
-use Fliglio\Web\HttpAttributes;
-use Fliglio\RestFc\DiInvokerApp;
+use Fliglio\Routing\DefaultInvokerApp;
+use Fliglio\Http\Http;
 
 
-require_once __DIR__ . '/../fliglio/bootstrap.php';
+error_reporting(E_ALL | E_STRICT);
+ini_set("display_errors" , 1);
+
+require_once __DIR__ . '/../vendor/autoload.php';
 
 
 
@@ -27,42 +34,33 @@ $routeMap
 	->connect('demo', RouteBuilder::get()
 		->uri('/demo')
 		->command('MyApp\Example.DemoResource.getDemo')
-		->method(HttpAttributes::METHOD_GET)
+		->method(Http::METHOD_GET)
 		->build()
 	)
 	->connect('foo', RouteBuilder::get()
 		->uri('/foo')
 		->command('MyApp\Example.FooResource.getFoo')
-		->method(HttpAttributes::METHOD_GET)
+		->method(Http::METHOD_GET)
 		->build()
 	)
 	->connect('health', RouteBuilder::get()
 		->uri('/api/health')
 		->command('MyApp\Example.HealthResource.getHealth')
-		->method(HttpAttributes::METHOD_GET)
-		->build()
-	)
-	->connect("error", RouteBuilder::get()
-		->catchNone()
-		->command('MyApp\Example.ErrorResource.handleError')
-		->build()
-	)
-	->connect("404", RouteBuilder::get()
-		->catchAll()
-		->command('MyApp\Example.ErrorResource.handlePageNotFound')
+		->method(Http::METHOD_GET)
 		->build()
 	);
 
 
 
+// Configure Front Controller Chains
+$chain  = new HttpApp(new RestApp(new UrlLintApp(new RoutingApp(new DefaultInvokerApp(), $routeMap))));
 
-// Configure Front Controller Chain & Default Resolver
-$chain  = new flfc\HttpApp(new UriLintApp(new RoutingApp(new DiInvokerApp(), $routeMap)));
+// Configure Resolvers
+$chains = new FcChainRegistry();
+$chains->addResolver(new DefaultFcChainResolver($chain));
 
-FcChainFactory::addResolver(new DefaultFcChainResolver($chain));
-
-// Run App
-$context = new Context(Request::createDefault(), new Response());
-$chainRunner = new FcChainRunner();
-$chainRunner->dispatchRequest($context, "@404", "@error");
+// Dispatch Request
+$dispatcherFactory = new FcDispatcherFactory();
+$dispatcher = $dispatcherFactory->createDefault($chains);
+$dispatcher->dispatch();
 

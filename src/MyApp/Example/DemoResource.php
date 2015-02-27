@@ -1,13 +1,10 @@
 <?php
-
 namespace MyApp\Example;
 
 use Fliglio\Consul\AddressProviderFactory;
 
 use Fliglio\Web\Curl;
 use Fliglio\Web\CurlRequest;
-
-use Fliglio\Fltk\JsonView;
 
 
 class DemoResource {
@@ -19,7 +16,7 @@ class DemoResource {
 		$ap = $apFactory->createConsulAddressProvider('foo');
 		$add = $ap->getAddress();
 
-		$url = sprintf("%s://%s:%s/foo", $add->getScheme(), $add->getHost(), $add->getPort());
+		$url = sprintf("http://%s:%s/foo", $add->getHost(), $add->getPort());
 
 		$curl = new Curl();
 		$resp = $curl->request(new CurlRequest(Curl::GET, $url));
@@ -27,7 +24,7 @@ class DemoResource {
 		$content = json_decode($resp->getContent());
 
 
-		return new JsonView(array(
+		return array(
 			'discovered' => array(
 				'host' => $add->getHost(),
 				'port' => $add->getPort()
@@ -35,7 +32,7 @@ class DemoResource {
 			'resource' => 'demo',
 			'content' => $content
 
-		));
+		);
 	}
 
 }
