@@ -3,9 +3,9 @@ namespace MyApp\Example;
 
 use Fliglio\Consul\AddressProviderFactory;
 
-use Fliglio\Web\Curl;
-use Fliglio\Web\CurlRequest;
-
+use Fliglio\Web\Client\BasicClient;
+use Fliglio\Web\UrlBuilder;
+use Fliglio\Http\Http;
 
 class DemoResource {
 
@@ -16,13 +16,21 @@ class DemoResource {
 		$ap = $apFactory->createConsulAddressProvider('foo');
 		$add = $ap->getAddress();
 
-		$url = sprintf("http://%s:%s/foo", $add->getHost(), $add->getPort());
+		$b = new UrlBuilder();
+		$url = $b
+			->host($add->getHost())
+			->port($add->getPort())
+			->path('/foo')
+			->build();		
 
-		$curl = new Curl();
-		$resp = $curl->request(new CurlRequest(Curl::GET, $url));
+		$client = new BasicClient();
+		$resp = $client->get($url);
 
-		$content = json_decode($resp->getContent());
-
+		if ($resp->getStatus() == Http::STATUS_OK) {
+			$content = json_decode($resp->getBody());
+		} else {
+			$content = $resp->getStatus();
+		}
 
 		return array(
 			'discovered' => array(
